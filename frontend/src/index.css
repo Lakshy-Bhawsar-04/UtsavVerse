@@ -1,0 +1,9 @@
+/* ==========================================================================
+   UtsavVerse Global Stylesheet Entry
+   Loads Bootstrap 5 followed by editable UtsavVerse CSS files.
+   ========================================================================== */
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "./styles/theme.css";
+@import "./styles/components.css";
+

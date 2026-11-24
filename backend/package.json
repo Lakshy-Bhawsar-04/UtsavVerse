@@ -1,0 +1,23 @@
+{
+  "name": "UtsavVerse-backend",
+  "version": "1.0.0",
+  "description": "UtsavVerse MERN Stack Backend API (Node.js + Express + MongoDB Atlas + Mongoose)",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node utils/seedCli.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.9.1",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
+    "razorpay": "^2.9.6"
+  }
+}

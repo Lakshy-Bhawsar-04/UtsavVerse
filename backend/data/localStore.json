@@ -1,0 +1,742 @@
+{
+  "users": [
+    {
+      "_id": "844d51f5d4fae9238489f02a",
+      "name": "Aarav Mehta",
+      "email": "curator@UtsavVerse.in",
+      "password": "$2b$10$f5y/gcfCfSsHCByKOXOr4OOOYByvlv3B.f/XAmFhkOx8b7Bs00Kga",
+      "phone": "+91 98200 11223",
+      "city": "Mumbai",
+      "role": "organizer",
+      "organizerProfile": {
+        "organizationName": "Aarav Live Productions",
+        "bio": "Curating premier concerts, festivals, and cultural experiences across India.",
+        "city": "Mumbai",
+        "approvalStatus": "approved"
+      },
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "83c6a20b6a19b263ddc24586",
+      "name": "Lakshy Bhawsar",
+      "email": "lakshybhawsar04@gmail.com",
+      "password": "$2b$10$S8E5AWcPos0EzhfDUnIqGeyg.ojCnUaOO8KItTt6WEDMQvMNmp2Du",
+      "phone": "9329343275",
+      "city": "Mumbai",
+      "role": "admin",
+      "organizerProfile": {
+        "organizationName": "",
+        "bio": "",
+        "website": "",
+        "gstNumber": "",
+        "city": "",
+        "approvalStatus": "pending",
+        "rejectionReason": ""
+      },
+      "isActive": true,
+      "createdAt": "2026-11-23T15:41:58.193Z",
+      "updatedAt": "2026-11-23T15:41:58.193Z"
+    }
+  ],
+  "categories": [
+    {
+      "_id": "7662368a1e58e807689fbd37",
+      "name": "Music Concerts",
+      "slug": "music-concerts",
+      "description": "Arena tours, indie acoustic nights, Sufi mehfils, and symphony performances.",
+      "icon": "FiMusic",
+      "image": "/src/assets/images/hero_indian_concert_1795169039444.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.079Z"
+    },
+    {
+      "_id": "5a4086c66a87e6f8b5742548",
+      "name": "Wedding Events",
+      "slug": "wedding-events",
+      "description": "Royal palace showcases, bridal couture exhibitions, and destination wedding expos.",
+      "icon": "FiHeart",
+      "image": "/src/assets/images/event_indian_wedding_1795169039303.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "291e2d10409f241895604236",
+      "name": "Cultural Events",
+      "slug": "cultural-events",
+      "description": "Classical Bharatanatyam, Kathak recitals, theatre, and heritage arts.",
+      "icon": "FiFeather",
+      "image": "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "173004c2d1f1c51d781b06e8",
+      "name": "Festivals",
+      "slug": "festivals",
+      "description": "Lantern nights, literary melas, culinary carnivals, and seasonal celebrations.",
+      "icon": "FiSun",
+      "image": "/src/assets/images/event_festive_celebration_1795169039334.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "5f814cd72a9614776c2ce3cc",
+      "name": "Technology Conferences",
+      "slug": "technology-conferences",
+      "description": "AI summits, developer conferences, product leadership forums, and hackathons.",
+      "icon": "FiCpu",
+      "image": "/src/assets/images/event_tech_conference_1795169039578.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "2489c113b6d76c34d8ce8d69",
+      "name": "Workshops",
+      "slug": "workshops",
+      "description": "Hands-on pottery, design sprints, culinary masterclasses, and photography labs.",
+      "icon": "FiLayers",
+      "image": "/src/assets/images/event_creative_workshop_1795169040206.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "0909dc04b2d55f64d45dab31",
+      "name": "Sports Events",
+      "slug": "sports-events",
+      "description": "City marathons, cricket fan fests, badminton championships, and yoga retreats.",
+      "icon": "FiAward",
+      "image": "/src/assets/images/hero_indian_concert_1795169039444.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "3664c6bddbfa1059ddb45a2a",
+      "name": "Comedy Shows",
+      "slug": "comedy-shows",
+      "description": "Stand-up specials, improv nights, and open-mic comedy clubs across Indian metros.",
+      "icon": "FiSmile",
+      "image": "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "bfce38c5a7e134eb16d2f351",
+      "name": "Business Events",
+      "slug": "business-events",
+      "description": "Founder mixers, venture capital summits, retail expos, and trade conclaves.",
+      "icon": "FiBriefcase",
+      "image": "/src/assets/images/event_tech_conference_1795169039578.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "cbddc2676107c451e30fb42a",
+      "name": "Educational Events",
+      "slug": "educational-events",
+      "description": "University symposiums, career bootcamps, design critiques, and science fairs.",
+      "icon": "FiBookOpen",
+      "image": "/src/assets/images/event_creative_workshop_1795169040206.jpg",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    }
+  ],
+  "cities": [
+    {
+      "_id": "77a66b88150e764d3e26c684",
+      "name": "Mumbai",
+      "slug": "mumbai",
+      "state": "Maharashtra",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "986141e2dcf0b55f7b2e3227",
+      "name": "New Delhi",
+      "slug": "new-delhi",
+      "state": "Delhi",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "e3079d90151d6084d52cce31",
+      "name": "Bengaluru",
+      "slug": "bengaluru",
+      "state": "Karnataka",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "fd013ee3a682c9a882d30693",
+      "name": "Jaipur",
+      "slug": "jaipur",
+      "state": "Rajasthan",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "ffa4069f7631865c88ddd6bd",
+      "name": "Udaipur",
+      "slug": "udaipur",
+      "state": "Rajasthan",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "ee00269a7cd0b046b0f122bb",
+      "name": "Hyderabad",
+      "slug": "hyderabad",
+      "state": "Telangana",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "bfa38f2ef785ba8ffdfbfaae",
+      "name": "Pune",
+      "slug": "pune",
+      "state": "Maharashtra",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "78d2219b0c132cb77d82b550",
+      "name": "Ahmedabad",
+      "slug": "ahmedabad",
+      "state": "Gujarat",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "d5d7381caa7fe86d6ffdf766",
+      "name": "Chennai",
+      "slug": "chennai",
+      "state": "Tamil Nadu",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    },
+    {
+      "_id": "0cec4fce9d92b470bdc8e156",
+      "name": "Kolkata",
+      "slug": "kolkata",
+      "state": "West Bengal",
+      "isActive": true,
+      "createdAt": "2026-11-23T06:19:18.080Z"
+    }
+  ],
+  "events": [
+    {
+      "_id": "b1bf997220707f4f39b7b5fa",
+      "title": "Mumbai Alive: Indie & Sufi Sunset Concert",
+      "slug": "mumbai-alive-indie-sufi-sunset-concert",
+      "shortDescription": "An open-air twilight concert by the Arabian Sea featuring leading Indian indie bands and Sufi vocalists.",
+      "description": "Experience an unforgettable evening along Mumbai’s waterfront as acoustic folk ensembles, contemporary Sufi vocalists, and indie rock headliners share one bespoke open-air stage. Complete with curated artisanal food stalls, spatial concert acoustics, and golden-hour views of the skyline.",
+      "category": "Music Concerts",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Aarav Live Productions",
+      "organizerEmail": "events@aaravlive.in",
+      "date": "2026-12-12T17:30:00.000Z",
+      "time": "5:30 PM IST",
+      "venue": "Bayview Promenade Amphitheatre",
+      "address": "Marine Drive Extension, Colaba, Mumbai, Maharashtra 400005",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "bannerImage": "/src/assets/images/hero_indian_concert_1795169039444.jpg",
+      "galleryImages": [
+        "/src/assets/images/hero_indian_concert_1795169039444.jpg",
+        "/src/assets/images/event_festive_celebration_1795169039334.jpg",
+        "/src/assets/images/event_cultural_festival_1795169040114.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "5b5fd10a1f58bdb075bda6bd",
+          "name": "General Standing",
+          "description": "Main lawn open-air access with full stage sightlines.",
+          "price": 1499,
+          "totalSeats": 400,
+          "availableSeats": 284
+        },
+        {
+          "_id": "ca1c66a84c9ede11a3c34172",
+          "name": "Fan Pit Front",
+          "description": "Dedicated standing zone directly in front of the main stage.",
+          "price": 2999,
+          "totalSeats": 150,
+          "availableSeats": 78
+        },
+        {
+          "_id": "14edf334268002449bcc983d",
+          "name": "VIP Lounge Deck",
+          "description": "Elevated shaded deck with complimentary refreshments and priority entry.",
+          "price": 5499,
+          "totalSeats": 60,
+          "availableSeats": 24
+        }
+      ],
+      "status": "approved",
+      "isFeatured": true,
+      "ratingAverage": 4.9,
+      "ratingCount": 2,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "a381631127aa9dab81d34a22",
+      "title": "Jaipur Royal Heritage Wedding & Couture Showcase",
+      "slug": "jaipur-royal-heritage-wedding-couture-showcase",
+      "shortDescription": "A curated three-day palace wedding showcase featuring heritage mandap artistry, bridal couture, and royal hospitality.",
+      "description": "Step inside a sandstone heritage courtyard in Jaipur transformed into a living gallery of contemporary Indian weddings. Meet master floral architects, heritage jewellers, and bridal couturiers while experiencing live ceremonial mandap lighting and classical shehnai ensembles.",
+      "category": "Wedding Events",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Rajputana Celebrations Guild",
+      "organizerEmail": "concierge@rajputanaguild.in",
+      "date": "2026-12-19T16:00:00.000Z",
+      "time": "4:00 PM IST",
+      "venue": "Surya Mahal Courtyard Palace",
+      "address": "Amer Road, Pink City, Jaipur, Rajasthan 302002",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "bannerImage": "/src/assets/images/event_indian_wedding_1795169039303.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_indian_wedding_1795169039303.jpg",
+        "/src/assets/images/event_festive_celebration_1795169039334.jpg",
+        "/src/assets/images/event_cultural_festival_1795169040114.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "73fc753db273475da672ccb3",
+          "name": "Day Visitor Pass",
+          "description": "Access to all couture pavilions, floral installations, and courtyard showcase.",
+          "price": 1299,
+          "totalSeats": 250,
+          "availableSeats": 182
+        },
+        {
+          "_id": "982a8d71955298d5d424d640",
+          "name": "Couple Consultation Suite",
+          "description": "Pass for two with private designer consultations and royal high tea.",
+          "price": 3999,
+          "totalSeats": 80,
+          "availableSeats": 41
+        }
+      ],
+      "status": "approved",
+      "isFeatured": true,
+      "ratingAverage": 4.8,
+      "ratingCount": 1,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "308e080e092d32434eee3561",
+      "title": "Bengaluru AI & Cloud Architecture Summit 2026",
+      "slug": "bengaluru-ai-cloud-architecture-summit-2026",
+      "shortDescription": "Two days of deep technical keynotes, distributed systems workshops, and founder roundtables in Bengaluru.",
+      "description": "Designed for staff engineers, systems architects, and technical founders, the Bengaluru AI & Cloud Summit brings 40+ engineering leaders together for practical talks on production LLM infrastructure, resilient databases, and developer tooling.",
+      "category": "Technology Conferences",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Deccan Tech Collective",
+      "organizerEmail": "summit@deccantech.in",
+      "date": "2026-12-26T09:30:00.000Z",
+      "time": "9:30 AM IST",
+      "venue": "Nandi International Convention Centre",
+      "address": "Outer Ring Road, Bellandur, Bengaluru, Karnataka 560103",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "bannerImage": "/src/assets/images/event_tech_conference_1795169039578.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_tech_conference_1795169039578.jpg",
+        "/src/assets/images/event_creative_workshop_1795169040206.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "e8fb3d5a4555406b6a1054a5",
+          "name": "Developer Standard",
+          "description": "Full keynote access, breakout tracks, and conference lunch.",
+          "price": 2499,
+          "totalSeats": 500,
+          "availableSeats": 310
+        },
+        {
+          "_id": "90c93f793bce281043b7efe8",
+          "name": "Workshop + Pro Pass",
+          "description": "Includes hands-on lab sessions, speaker lounge, and recorded sessions.",
+          "price": 4999,
+          "totalSeats": 120,
+          "availableSeats": 52
+        },
+        {
+          "_id": "b5d16f27c06932ba52e0b016",
+          "name": "Executive Founder Pass",
+          "description": "Front-row seating, private CTO dinner, and partner introductions.",
+          "price": 8999,
+          "totalSeats": 40,
+          "availableSeats": 14
+        }
+      ],
+      "status": "approved",
+      "isFeatured": true,
+      "ratingAverage": 4.9,
+      "ratingCount": 1,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "acf688e54588218f3884289a",
+      "title": "Udaipur Lakeside Lantern & Classical Arts Festival",
+      "slug": "udaipur-lakeside-lantern-classical-arts-festival",
+      "shortDescription": "An atmospheric lakeside festival celebrating folk music, lantern lighting, and Rajasthani culinary heritage.",
+      "description": "As dusk settles over Lake Pichola, witness hundreds of handcrafted brass lanterns illuminate the heritage waterfront pavilion. Enjoy live sitar-tabla jugalbandi, folk storytellers, and a curated regional tasting menu.",
+      "category": "Festivals",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Mewar Heritage Foundation",
+      "organizerEmail": "hello@mewararts.in",
+      "date": "2027-01-09T18:00:00.000Z",
+      "time": "6:00 PM IST",
+      "venue": "Pichola Ghat Pavilion",
+      "address": "Lake Pichola Promenade, Udaipur, Rajasthan 313001",
+      "city": "Udaipur",
+      "state": "Rajasthan",
+      "bannerImage": "/src/assets/images/event_festive_celebration_1795169039334.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_festive_celebration_1795169039334.jpg",
+        "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+        "/src/assets/images/event_indian_wedding_1795169039303.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "9e0b2154cc17745549a221ad",
+          "name": "Pavilion General",
+          "description": "Evening festival entry with live music and lantern release ceremony.",
+          "price": 1199,
+          "totalSeats": 300,
+          "availableSeats": 215
+        },
+        {
+          "_id": "22b61e431576a9940937bc6d",
+          "name": "Ghat Dinner & Concert",
+          "description": "Reserved waterfront seating with 5-course Mewari dinner.",
+          "price": 3499,
+          "totalSeats": 90,
+          "availableSeats": 38
+        }
+      ],
+      "status": "approved",
+      "isFeatured": true,
+      "ratingAverage": 5,
+      "ratingCount": 1,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "04b7d36407491b43f99330ee",
+      "title": "Natya Darpan: Classical Dance & Rhythm Evening",
+      "slug": "natya-darpan-classical-dance-rhythm-evening",
+      "shortDescription": "An intimate courtyard performance of Bharatanatyam, Odissi, and live Carnatic percussion.",
+      "description": "Hosted inside a restored heritage haveli courtyard, Natya Darpan presents celebrated classical exponents accompanied by live mridangam, bansuri, and vocalists in an acoustically rich setting.",
+      "category": "Cultural Events",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Kalakshetra Cultural Trust",
+      "organizerEmail": "program@kalakshetratrust.in",
+      "date": "2027-01-16T18:30:00.000Z",
+      "time": "6:30 PM IST",
+      "venue": "Alwar Haveli Courtyard",
+      "address": "Mandi House Cultural Precinct, New Delhi 110001",
+      "city": "New Delhi",
+      "state": "Delhi",
+      "bannerImage": "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+        "/src/assets/images/event_festive_celebration_1795169039334.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "afddc6488906f53b8bd9107f",
+          "name": "Courtyard Seating",
+          "description": "Traditional floor cushion & gallery seating.",
+          "price": 799,
+          "totalSeats": 180,
+          "availableSeats": 120
+        },
+        {
+          "_id": "5744f44d7c1ba4e6bbe4df0e",
+          "name": "Patron Front Row",
+          "description": "Reserved front-row chairs with artist meet-and-greet.",
+          "price": 1899,
+          "totalSeats": 50,
+          "availableSeats": 22
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.7,
+      "ratingCount": 1,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "e391af401870e1c089d8812b",
+      "title": "Terracotta & Wheel Pottery Studio Workshop",
+      "slug": "terracotta-wheel-pottery-studio-workshop",
+      "shortDescription": "A 4-hour guided ceramic wheel-throwing and natural glazing workshop in South Delhi.",
+      "description": "Unplug from screens and spend an inspiring afternoon working with raw terracotta and stoneware clay. Master potters guide small batches of participants through centering, shaping, and surface carving—take home two kiln-fired pieces.",
+      "category": "Workshops",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Mitti Craft Studio",
+      "organizerEmail": "studio@mitticraft.in",
+      "date": "2027-01-23T14:00:00.000Z",
+      "time": "2:00 PM IST",
+      "venue": "Mitti Daylight Studio",
+      "address": "Shahpur Jat Artisans Lane, New Delhi 110049",
+      "city": "New Delhi",
+      "state": "Delhi",
+      "bannerImage": "/src/assets/images/event_creative_workshop_1795169040206.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_creative_workshop_1795169040206.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "7007eb613a90d4774fc4e3c4",
+          "name": "Individual Potter Pass",
+          "description": "Includes clay, wheel station, apron, refreshments, and kiln firing.",
+          "price": 1799,
+          "totalSeats": 24,
+          "availableSeats": 11
+        },
+        {
+          "_id": "87d83b49de7fed5f8aac9a0b",
+          "name": "Pair / Duo Station",
+          "description": "Two adjacent wheels with guided instruction and gift packaging.",
+          "price": 3299,
+          "totalSeats": 12,
+          "availableSeats": 5
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.9,
+      "ratingCount": 1,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "021824c062d160c73614f228",
+      "title": "Pune Midnight Half Marathon & Fitness Carnival",
+      "slug": "pune-midnight-half-marathon-fitness-carnival",
+      "shortDescription": "A floodlit 21K, 10K, and 5K community run through Pune’s tree-lined avenues with live music finish.",
+      "description": "Lace up for Pune’s signature winter night run. Featuring chip-timed 21.1K, 10K, and 5K categories, hydration lounges, physiotherapy recovery zones, and a sunrise acoustic breakfast concert at the stadium.",
+      "category": "Sports Events",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Sahyadri Athletics Club",
+      "organizerEmail": "run@sahyadriathletics.in",
+      "date": "2027-01-30T21:30:00.000Z",
+      "time": "9:30 PM IST",
+      "venue": "Balewadi Sports Complex",
+      "address": "Mahalunge-Balewadi Road, Pune, Maharashtra 411045",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "bannerImage": "/src/assets/images/hero_indian_concert_1795169039444.jpg",
+      "galleryImages": [
+        "/src/assets/images/hero_indian_concert_1795169039444.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "711f180ff1c9c97a5d481a63",
+          "name": "5K Fun Run",
+          "description": "Includes dry-fit jersey, finisher medal, and breakfast.",
+          "price": 699,
+          "totalSeats": 500,
+          "availableSeats": 340
+        },
+        {
+          "_id": "31c2cedb73dcacd18b5b5b8c",
+          "name": "21K Half Marathon",
+          "description": "Official timing bib, pacing support, jersey, and recovery zone.",
+          "price": 1499,
+          "totalSeats": 300,
+          "availableSeats": 185
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.6,
+      "ratingCount": 0,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "ee6f728cef4b1f81fb631432",
+      "title": "Hyderabad Stand-Up Comedy Gala: Late Night Laughs",
+      "slug": "hyderabad-stand-up-comedy-gala-late-night-laughs",
+      "shortDescription": "Four touring Indian stand-up comedians bring fresh observational sets to Jubilee Hills.",
+      "description": "An evening of sharp observational humour, rapid-fire crowd work, and musical comedy inside Hyderabad’s premier acoustic theatre. Doors open 45 minutes prior with curated café service.",
+      "category": "Comedy Shows",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Deccan Comedy Collective",
+      "organizerEmail": "shows@deccancomedy.in",
+      "date": "2027-02-06T20:00:00.000Z",
+      "time": "8:00 PM IST",
+      "venue": "Rangbhoomi Auditorium",
+      "address": "Road No. 36, Jubilee Hills, Hyderabad, Telangana 500033",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "bannerImage": "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_cultural_festival_1795169040114.jpg",
+        "/src/assets/images/hero_indian_concert_1795169039444.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "9721ffb2b7fc35cd69608dc8",
+          "name": "Silver Balcony",
+          "description": "Elevated clear-view balcony seats.",
+          "price": 599,
+          "totalSeats": 200,
+          "availableSeats": 118
+        },
+        {
+          "_id": "cf7dbc951cd99dd472319d64",
+          "name": "Gold Orchestra",
+          "description": "Center orchestra seating with zero obstruction.",
+          "price": 999,
+          "totalSeats": 120,
+          "availableSeats": 44
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.8,
+      "ratingCount": 0,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "e1fd3c207f01ff20ffeda052",
+      "title": "India D2C & Retail Founders Conclave",
+      "slug": "india-d2c-retail-founders-conclave",
+      "shortDescription": "High-signal panels on omnichannel growth, supply chains, and consumer brand building in Mumbai.",
+      "description": "Meet 300+ consumer brand founders, retail operators, and seed-to-Series B investors in Mumbai. Features live teardown sessions on unit economics, quick-commerce scaling, and packaging sustainability.",
+      "category": "Business Events",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Bharat Venture Forum",
+      "organizerEmail": "forum@bharatventure.in",
+      "date": "2027-02-14T10:00:00.000Z",
+      "time": "10:00 AM IST",
+      "venue": "Jio World Convention Centre",
+      "address": "G Block, Bandra Kurla Complex, Mumbai, Maharashtra 400051",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "bannerImage": "/src/assets/images/event_tech_conference_1795169039578.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_tech_conference_1795169039578.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "91e05859085ad032c177a976",
+          "name": "Delegate Pass",
+          "description": "Full access to keynotes, exhibition floor, and networking lunch.",
+          "price": 3499,
+          "totalSeats": 280,
+          "availableSeats": 190
+        },
+        {
+          "_id": "690d8b9858cd1ab1ea2d5b37",
+          "name": "Investor & Founder Table",
+          "description": "Includes curated 1-on-1 pitch roundtables and VIP dinner.",
+          "price": 7999,
+          "totalSeats": 50,
+          "availableSeats": 19
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.7,
+      "ratingCount": 0,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    },
+    {
+      "_id": "bbcb826d75975cf0c5b86320",
+      "title": "National Product Design & Full-Stack Bootcamp",
+      "slug": "national-product-design-full-stack-bootcamp",
+      "shortDescription": "An intensive weekend educational symposium for students and early-career engineers in Ahmedabad.",
+      "description": "Learn modern web architecture, accessibility engineering, and portfolio storytelling directly from senior product designers and principal engineers. Includes live portfolio reviews and certificate of completion.",
+      "category": "Educational Events",
+      "organizerId": "844d51f5d4fae9238489f02a",
+      "organizerName": "Sabarmati Design Academy",
+      "organizerEmail": "admissions@sabarmatidesign.in",
+      "date": "2027-02-20T09:00:00.000Z",
+      "time": "9:00 AM IST",
+      "venue": "CEPT Heritage Auditorium",
+      "address": "Kasturbhai Lalbhai Campus, Navrangpura, Ahmedabad, Gujarat 380009",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "bannerImage": "/src/assets/images/event_creative_workshop_1795169040206.jpg",
+      "galleryImages": [
+        "/src/assets/images/event_creative_workshop_1795169040206.jpg",
+        "/src/assets/images/event_tech_conference_1795169039578.jpg"
+      ],
+      "ticketCategories": [
+        {
+          "_id": "8c08992d9e86ebc3ef71e311",
+          "name": "Student Pass",
+          "description": "Subsidized pass for university students with valid ID.",
+          "price": 499,
+          "totalSeats": 220,
+          "availableSeats": 145
+        },
+        {
+          "_id": "50ac5eccc8e296358ccd6076",
+          "name": "Professional Learner",
+          "description": "Includes workbook, mentor review slot, and digital certificate.",
+          "price": 1299,
+          "totalSeats": 100,
+          "availableSeats": 67
+        }
+      ],
+      "status": "approved",
+      "isFeatured": false,
+      "ratingAverage": 4.9,
+      "ratingCount": 0,
+      "cancellationPolicy": "Full refund available up to 24 hours prior to the event start time.",
+      "createdAt": "2026-11-23T06:19:18.160Z",
+      "updatedAt": "2026-11-23T06:19:18.160Z"
+    }
+  ],
+  "bookings": [],
+  "payments": [],
+  "reviews": [],
+  "notifications": [
+    {
+      "_id": "86727c0e1a0b72cdde8a19aa",
+      "userId": "83c6a20b6a19b263ddc24586",
+      "title": "Welcome to UtsavVerse",
+      "message": "Your account is active. Start exploring events across India.",
+      "type": "system",
+      "link": "/events",
+      "isRead": false,
+      "createdAt": "2026-11-23T15:41:58.197Z"
+    }
+  ],
+  "subscribers": [],
+  "contacts": [
+    {
+      "_id": "b9ba795bfcb5a8488e660a15",
+      "name": "Lakshy",
+      "email": "lak@gmail.com",
+      "subject": "Events",
+      "message": "Next event sports",
+      "status": "new",
+      "createdAt": "2026-11-23T15:39:42.288Z"
+    }
+  ]
+}

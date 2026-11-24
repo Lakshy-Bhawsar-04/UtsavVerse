@@ -1,0 +1,8 @@
+{
+  "name": "UtsavVerse",
+  "description": "Discover Events. Create Memories. Full-stack Indian event discovery, ticketing, and organizer management platform built with the MERN stack.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

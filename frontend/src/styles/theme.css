@@ -1,0 +1,197 @@
+/* ==========================================================================
+   UtsavVerse Design System Variables & Base Typography
+   Edit colors, fonts, spacing, and radii here directly in VS Code.
+   ========================================================================== */
+
+:root {
+  /* Brand Palette */
+  --ev-primary: #6c3bff;
+  --ev-primary-hover: #5728e8;
+  --ev-primary-soft: #f2edff;
+  --ev-secondary: #ff6b6b;
+  --ev-secondary-hover: #ee5252;
+  --ev-secondary-soft: #fff0f0;
+
+  /* Neutral Canvas & Surfaces */
+  --ev-bg: #ffffff;
+  --ev-bg-light: #f7f6fb;
+  --ev-surface: #ffffff;
+  --ev-ink: #131122;
+  --ev-ink-secondary: #4a4663;
+  --ev-ink-muted: #6f6b85;
+  --ev-border: #e7e4f2;
+  --ev-border-strong: #d4cfe8;
+
+  /* Semantic Status Colors */
+  --ev-success: #15803d;
+  --ev-success-bg: #eefbf3;
+  --ev-warning: #b45309;
+  --ev-warning-bg: #fef7e6;
+  --ev-danger: #b91c1c;
+  --ev-danger-bg: #fef1f1;
+
+  /* Typography */
+  --ev-font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ev-font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ev-font-mono: 'JetBrains Mono', monospace;
+
+  /* Radii & Shadows */
+  --ev-radius-sm: 8px;
+  --ev-radius-md: 12px;
+  --ev-radius-lg: 16px;
+  --ev-shadow-sm: 0 2px 10px rgba(19, 17, 34, 0.04);
+  --ev-shadow-md: 0 10px 28px rgba(19, 17, 34, 0.08);
+  --ev-transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--ev-bg);
+  color: var(--ev-ink);
+  font-family: var(--ev-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.ev-display {
+  font-family: var(--ev-font-display);
+  color: var(--ev-ink);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.ev-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-mono {
+  font-family: var(--ev-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-section {
+  padding: 4.5rem 0;
+}
+
+.ev-section-light {
+  background-color: var(--ev-bg-light);
+}
+
+.ev-section-title {
+  font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.ev-section-subtitle {
+  color: var(--ev-ink-muted);
+  font-size: 1.025rem;
+  max-width: 62ch;
+}
+
+/* Primary & Secondary Buttons */
+.btn-ev-primary {
+  background-color: var(--ev-primary);
+  border: 1px solid var(--ev-primary);
+  color: #ffffff;
+  font-family: var(--ev-font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1.35rem;
+  border-radius: var(--ev-radius-sm);
+  transition: transform var(--ev-transition), background-color var(--ev-transition),
+    border-color var(--ev-transition);
+  white-space: nowrap;
+}
+
+.btn-ev-primary:hover,
+.btn-ev-primary:focus-visible {
+  background-color: var(--ev-primary-hover);
+  border-color: var(--ev-primary-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-ev-primary:disabled {
+  background-color: #b7a4ff;
+  border-color: #b7a4ff;
+  color: #ffffff;
+  transform: none;
+}
+
+.btn-ev-secondary {
+  background-color: var(--ev-secondary);
+  border: 1px solid var(--ev-secondary);
+  color: #ffffff;
+  font-family: var(--ev-font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1.35rem;
+  border-radius: var(--ev-radius-sm);
+  transition: transform var(--ev-transition), background-color var(--ev-transition);
+  white-space: nowrap;
+}
+
+.btn-ev-secondary:hover,
+.btn-ev-secondary:focus-visible {
+  background-color: var(--ev-secondary-hover);
+  border-color: var(--ev-secondary-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-ev-outline {
+  background-color: transparent;
+  border: 1px solid var(--ev-border-strong);
+  color: var(--ev-ink);
+  font-family: var(--ev-font-display);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--ev-radius-sm);
+  transition: border-color var(--ev-transition), color var(--ev-transition),
+    background-color var(--ev-transition);
+  white-space: nowrap;
+}
+
+.btn-ev-outline:hover,
+.btn-ev-outline:focus-visible {
+  border-color: var(--ev-primary);
+  color: var(--ev-primary);
+  background-color: var(--ev-primary-soft);
+}
+
+/* Focus Accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ev-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
