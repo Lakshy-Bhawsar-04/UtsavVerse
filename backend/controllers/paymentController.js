@@ -19,17 +19,17 @@ import { asyncHandler } from '../middleware/errorMiddleware.js';
 // Razorpay configuration
 // --------------------------------------------------
 
+
 const getRazorpay = () => {
-  const keyId = process.env.RAZORPAY_KEY_ID;
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  const keyId = process.env.RAZORPAY_KEY_ID?.trim();
+  const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim();
 
   if (!keyId || !keySecret) {
-    throw new Error('Razorpay API keys are missing.');
+    throw new Error('Razorpay API keys are missing. Check backend environment variables.');
   }
 
-  // This controller is configured for Test Mode.
   if (!keyId.startsWith('rzp_test_')) {
-    throw new Error('Invalid Razorpay Test Mode Key ID.');
+    throw new Error('Invalid Razorpay Test Mode Key ID. Expected rzp_test_ prefix.');
   }
 
   return {
@@ -41,6 +41,7 @@ const getRazorpay = () => {
     }),
   };
 };
+
 
 // --------------------------------------------------
 // Create Razorpay Order
