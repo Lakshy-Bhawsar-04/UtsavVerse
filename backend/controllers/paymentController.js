@@ -1,7 +1,13 @@
+
 /**
  * backend/controllers/paymentController.js
- * Razorpay Test Mode order creation & backend HMAC-SHA256 signature verification.
- * Never trusts payment success solely from frontend responses.
+ *
+ * Razorpay Test Mode payment controller.
+ * - Creates genuine Razorpay orders.
+ * - Verifies HMAC-SHA256 signatures.
+ * - Fetches payment details directly from Razorpay.
+ * - Validates amount, currency, order ID and captured status.
+ * - Prevents duplicate payment verification.
  */
 
 import crypto from 'crypto';
@@ -9,112 +15,160 @@ import Razorpay from 'razorpay';
 import { store } from '../utils/dataStore.js';
 import { asyncHandler } from '../middleware/errorMiddleware.js';
 
-const getRazorpayKeys = () => ({
-  keyId: process.env.RAZORPAY_KEY_ID || 'rzp_test_UtsavVerse_demo_key',
-  keySecret: process.env.RAZORPAY_KEY_SECRET || 'UtsavVerse_razorpay_test_secret_key',
-});
+// --------------------------------------------------
+// Razorpay configuration
+// --------------------------------------------------
 
-const hasLiveRazorpayKeys = () => {
-  const keyId = process.env.RAZORPAY_KEY_ID || '';
-  const keySecret = process.env.RAZORPAY_KEY_SECRET || '';
-  return (
-    keyId.startsWith('rzp_') &&
-    !keyId.includes('demo') &&
-    !keyId.includes('xxxx') &&
-    keySecret.length > 10 &&
-    !keySecret.includes('xxxx')
-  );
+const getRazorpay = () => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!keyId || !keySecret) {
+    throw new Error('Razorpay API keys are missing.');
+  }
+
+  // This controller is configured for Test Mode.
+  if (!keyId.startsWith('rzp_test_')) {
+    throw new Error('Invalid Razorpay Test Mode Key ID.');
+  }
+
+  return {
+    keyId,
+    keySecret,
+    client: new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    }),
+  };
 };
+
+// --------------------------------------------------
+// Create Razorpay Order
+// --------------------------------------------------
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { bookingId } = req.body;
+
   if (!bookingId) {
-    return res.status(400).json({ success: false, message: 'Booking ID is required.' });
+    return res.status(400).json({
+      success: false,
+      message: 'Booking ID is required.',
+    });
   }
 
   const booking = await store.findBookingById(bookingId);
+
   if (!booking) {
-    return res.status(404).json({ success: false, message: 'Booking not found.' });
+    return res.status(404).json({
+      success: false,
+      message: 'Booking not found.',
+    });
   }
 
+  // Verify booking ownership
   if (String(booking.userId) !== String(req.user._id)) {
-    return res.status(403).json({ success: false, message: 'Unauthorized booking access.' });
+    return res.status(403).json({
+      success: false,
+      message: 'Unauthorized booking access.',
+    });
   }
 
   if (booking.paymentStatus === 'paid') {
-    return res.status(400).json({ success: false, message: 'This booking is already paid.' });
+    return res.status(400).json({
+      success: false,
+      message: 'This booking is already paid.',
+    });
   }
 
   if (booking.bookingStatus === 'cancelled') {
-    return res.status(400).json({ success: false, message: 'Cannot pay for a cancelled booking.' });
+    return res.status(400).json({
+      success: false,
+      message: 'Cannot pay for a cancelled booking.',
+    });
   }
 
-  const { keyId } = getRazorpayKeys();
-  const amountInPaise = Math.round(Number(booking.totalAmount) * 100);
-  let orderId = `order_test_${crypto.randomBytes(6).toString('hex')}`;
-  let checkoutMode = 'test_sandbox';
+  // Validate booking amount from database
+  const amountInRupees = Number(booking.totalAmount);
+  const amountInPaise = Math.round(amountInRupees * 100);
 
-  if (hasLiveRazorpayKeys()) {
-    const razorpay = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_KEY_SECRET,
+  if (
+    !Number.isFinite(amountInRupees) ||
+    amountInPaise <= 0 ||
+    !Number.isSafeInteger(amountInPaise) ||
+    Math.abs(amountInRupees * 100 - amountInPaise) > 0.000001
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid booking amount.',
     });
-    const order = await razorpay.orders.create({
-      amount: amountInPaise,
-      currency: 'INR',
-      receipt: booking.bookingCode,
-      notes: {
-        bookingId: String(booking._id),
-        eventTitle: booking.eventTitle,
-      },
-    });
-    orderId = order.id;
-    checkoutMode = 'razorpay_checkout';
   }
 
+  const { keyId, client } = getRazorpay();
+
+  // Create actual Razorpay order
+  const razorpayOrder = await client.orders.create({
+    amount: amountInPaise,
+    currency: 'INR',
+    receipt: String(booking.bookingCode).slice(0, 40),
+    notes: {
+      bookingId: String(booking._id),
+      bookingCode: String(booking.bookingCode),
+      eventTitle: String(booking.eventTitle || ''),
+    },
+  });
+
+  // Save payment record in database
   const payment = await store.createPayment({
     bookingId: booking._id,
     bookingCode: booking.bookingCode,
     userId: req.user._id,
     eventId: booking.eventId,
-    razorpayOrderId: orderId,
-    amount: booking.totalAmount,
+
+    razorpayOrderId: razorpayOrder.id,
+
+    amount: amountInRupees,
     currency: 'INR',
+
     status: 'created',
-    method: checkoutMode,
+    method: 'razorpay_checkout',
+
     verifiedOnServer: false,
   });
 
+  // Update booking with Razorpay order information
   await store.updateBooking(booking._id, {
-    razorpayOrderId: orderId,
+    razorpayOrderId: razorpayOrder.id,
     paymentId: payment._id,
   });
 
-  // Issue a server-authenticated sandbox authorization token ONLY for test_sandbox checkout
-  // so verifyPayment can validate server-issued orders without trusting raw frontend flags.
-  const sandboxChallenge =
-    checkoutMode === 'test_sandbox'
-      ? crypto
-          .createHmac('sha256', getRazorpayKeys().keySecret)
-          .update(`${orderId}|${booking._id}|${amountInPaise}`)
-          .digest('hex')
-      : undefined;
-
-  res.status(201).json({
+  return res.status(201).json({
     success: true,
+    message: 'Razorpay order created successfully.',
+
     order: {
-      id: orderId,
-      amount: amountInPaise,
-      amountInInr: booking.totalAmount,
-      currency: 'INR',
-      receipt: booking.bookingCode,
+      id: razorpayOrder.id,
+      amount: razorpayOrder.amount,
+      currency: razorpayOrder.currency,
+      receipt: razorpayOrder.receipt,
+      amountInInr: amountInRupees,
     },
+
     keyId,
-    checkoutMode,
-    sandboxChallenge,
-    booking,
+
+    checkoutMode: 'razorpay_checkout',
+
+    booking: {
+      _id: booking._id,
+      bookingCode: booking.bookingCode,
+      eventTitle: booking.eventTitle,
+      totalAmount: amountInRupees,
+    },
   });
 });
+
+// --------------------------------------------------
+// Verify Razorpay Payment
+// --------------------------------------------------
 
 export const verifyPayment = asyncHandler(async (req, res) => {
   const {
@@ -122,11 +176,14 @@ export const verifyPayment = asyncHandler(async (req, res) => {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    sandboxChallenge,
-    paymentMethod = 'UPI / Card (Test)',
   } = req.body;
 
-  if (!bookingId || !razorpay_order_id) {
+  if (
+    !bookingId ||
+    !razorpay_order_id ||
+    !razorpay_payment_id ||
+    !razorpay_signature
+  ) {
     return res.status(400).json({
       success: false,
       message: 'Missing required payment verification details.',
@@ -134,130 +191,240 @@ export const verifyPayment = asyncHandler(async (req, res) => {
   }
 
   const booking = await store.findBookingById(bookingId);
+
   if (!booking || String(booking.userId) !== String(req.user._id)) {
-    return res.status(404).json({ success: false, message: 'Booking record not found.' });
+    return res.status(404).json({
+      success: false,
+      message: 'Booking not found.',
+    });
   }
 
   const payment = await store.findPaymentByOrderId(razorpay_order_id);
-  if (!payment || String(payment.bookingId) !== String(booking._id)) {
+
+  if (
+    !payment ||
+    String(payment.bookingId) !== String(booking._id) ||
+    String(payment.userId) !== String(req.user._id)
+  ) {
     return res.status(400).json({
       success: false,
-      message: 'Order ID does not match the booking payment record.',
+      message: 'Payment order does not match this booking.',
     });
   }
 
-  const { keySecret } = getRazorpayKeys();
-  let isSignatureValid = false;
-  let finalPaymentId = razorpay_payment_id;
-  let finalSignature = razorpay_signature || '';
-
-  if (payment.method === 'razorpay_checkout') {
-    if (!razorpay_payment_id || !razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Razorpay payment ID and signature are required for verification.',
-      });
-    }
-    const expectedSignature = crypto
-      .createHmac('sha256', keySecret)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-      .digest('hex');
-
-    isSignatureValid =
-      expectedSignature.length === razorpay_signature.length &&
-      crypto.timingSafeEqual(Buffer.from(expectedSignature), Buffer.from(razorpay_signature));
-  } else {
-    // Verify server-issued HMAC challenge for Test Sandbox mode
-    const amountInPaise = Math.round(Number(booking.totalAmount) * 100);
-    const expectedChallenge = crypto
-      .createHmac('sha256', keySecret)
-      .update(`${razorpay_order_id}|${booking._id}|${amountInPaise}`)
-      .digest('hex');
-
-    if (
-      sandboxChallenge &&
-      expectedChallenge.length === sandboxChallenge.length &&
-      crypto.timingSafeEqual(Buffer.from(expectedChallenge), Buffer.from(sandboxChallenge))
-    ) {
-      isSignatureValid = true;
-      finalPaymentId = finalPaymentId || `pay_test_${crypto.randomBytes(6).toString('hex')}`;
-      finalSignature = crypto
-        .createHmac('sha256', keySecret)
-        .update(`${razorpay_order_id}|${finalPaymentId}`)
-        .digest('hex');
-    }
+  if (payment.method !== 'razorpay_checkout') {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid payment method.',
+    });
   }
+
+  if (booking.razorpayOrderId !== razorpay_order_id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Razorpay order ID does not match the booking.',
+    });
+  }
+
+  if (payment.status === 'verified' || booking.paymentStatus === 'paid') {
+    return res.status(409).json({
+      success: false,
+      message: 'This payment has already been verified.',
+    });
+  }
+
+  if (booking.bookingStatus === 'cancelled') {
+    return res.status(400).json({
+      success: false,
+      message: 'This booking has been cancelled.',
+    });
+  }
+
+  const { keySecret, client } = getRazorpay();
+
+  // Step 1: Verify Razorpay HMAC signature
+  const expectedSignature = crypto
+    .createHmac('sha256', keySecret)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest('hex');
+
+  const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+  const receivedBuffer = /^[a-f0-9]{64}$/i.test(razorpay_signature)
+    ? Buffer.from(razorpay_signature, 'hex')
+    : Buffer.alloc(0);
+
+  const isSignatureValid =
+    expectedBuffer.length === receivedBuffer.length &&
+    crypto.timingSafeEqual(expectedBuffer, receivedBuffer);
 
   if (!isSignatureValid) {
-    await store.updatePayment(payment._id, {
-      status: 'failed',
-      verifiedOnServer: false,
-    });
-    await store.updateBooking(booking._id, {
-      paymentStatus: 'failed',
-    });
     return res.status(400).json({
       success: false,
-      message: 'Payment signature verification failed. Transaction rejected by server.',
+      message: 'Invalid Razorpay payment signature.',
     });
   }
 
-  // Payment verified! Update payment and confirm booking
+  // Step 2: Fetch actual payment details from Razorpay
+  const razorpayPayment = await client.payments.fetch(
+    razorpay_payment_id
+  );
+
+  // Step 3: Validate order ID
+  if (razorpayPayment.order_id !== razorpay_order_id) {
+    return res.status(400).json({
+      success: false,
+      message: 'Payment order ID mismatch.',
+    });
+  }
+
+  // Step 4: Validate amount and currency
+  const expectedAmount = Math.round(Number(booking.totalAmount) * 100);
+
+  if (
+    razorpayPayment.amount !== expectedAmount ||
+    razorpayPayment.currency !== 'INR' ||
+    Number(payment.amount) !== Number(booking.totalAmount)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: 'Payment amount or currency mismatch.',
+    });
+  }
+
+  // Step 5: Only captured payments can confirm bookings
+  if (razorpayPayment.status !== 'captured') {
+    return res.status(400).json({
+      success: false,
+      message: `Payment is not captured. Current status: ${razorpayPayment.status}`,
+    });
+  }
+
+  // Step 6: Save verified payment
   const updatedPayment = await store.updatePayment(payment._id, {
-    razorpayPaymentId: finalPaymentId,
-    razorpaySignature: finalSignature,
+    razorpayPaymentId: razorpay_payment_id,
+    razorpaySignature: razorpay_signature,
+
     status: 'verified',
-    method: paymentMethod,
+    method: razorpayPayment.method || 'unknown',
+
     verifiedOnServer: true,
   });
 
+  // Step 7: Confirm booking
   const confirmedBooking = await store.updateBooking(booking._id, {
     paymentStatus: 'paid',
     bookingStatus: 'confirmed',
-    razorpayPaymentId: finalPaymentId,
+    razorpayPaymentId: razorpay_payment_id,
   });
 
+  // Step 8: Create notification
   await store.createNotification({
     userId: booking.userId,
+
     title: `Booking Confirmed (${booking.bookingCode})`,
+
     message: `Payment of ₹${booking.totalAmount} verified for ${booking.eventTitle}. Your e-ticket is ready.`,
+
     type: 'payment',
+
     link: `/booking/${booking._id}`,
   });
 
-  res.json({
+  return res.status(200).json({
     success: true,
     message: 'Payment verified and booking confirmed.',
+
     booking: confirmedBooking,
     payment: updatedPayment,
   });
 });
 
+// --------------------------------------------------
+// Record Payment Failure
+// --------------------------------------------------
+
 export const recordPaymentFailure = asyncHandler(async (req, res) => {
-  const { bookingId, razorpay_order_id, reason } = req.body;
-  const booking = await store.findBookingById(bookingId);
-  if (!booking || String(booking.userId) !== String(req.user._id)) {
-    return res.status(404).json({ success: false, message: 'Booking not found.' });
-  }
+  const {
+    bookingId,
+    razorpay_order_id,
+    reason,
+  } = req.body;
 
-  if (razorpay_order_id) {
-    const payment = await store.findPaymentByOrderId(razorpay_order_id);
-    if (payment) {
-      await store.updatePayment(payment._id, { status: 'failed' });
-    }
-  }
-
-  // Restore seats and mark booking cancelled/failed if user abandoned payment
-  if (booking.paymentStatus !== 'paid' && booking.bookingStatus !== 'cancelled') {
-    await store.restoreTicketSeats(booking.eventId, booking.ticketCategoryId, booking.quantity);
-    await store.updateBooking(booking._id, {
-      paymentStatus: 'failed',
-      bookingStatus: 'cancelled',
-      cancellationReason: reason || 'Payment failed or cancelled',
+  if (!bookingId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Booking ID is required.',
     });
   }
 
-  res.json({
+  const booking = await store.findBookingById(bookingId);
+
+  if (!booking || String(booking.userId) !== String(req.user._id)) {
+    return res.status(404).json({
+      success: false,
+      message: 'Booking not found.',
+    });
+  }
+
+  if (booking.paymentStatus === 'paid') {
+    return res.status(400).json({
+      success: false,
+      message: 'Paid booking cannot be marked as failed.',
+    });
+  }
+
+  // Verify supplied order belongs to this booking
+  if (razorpay_order_id) {
+    const payment = await store.findPaymentByOrderId(razorpay_order_id);
+
+    if (
+      !payment ||
+      String(payment.bookingId) !== String(booking._id) ||
+      String(payment.userId) !== String(req.user._id)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid payment order.',
+      });
+    }
+
+    if (payment.status === 'verified') {
+      return res.status(400).json({
+        success: false,
+        message: 'Verified payment cannot be marked as failed.',
+      });
+    }
+
+    await store.updatePayment(payment._id, {
+      status: 'failed',
+      verifiedOnServer: false,
+    });
+  }
+
+  // Do not release seats more than once
+  if (booking.bookingStatus === 'cancelled') {
+    return res.json({
+      success: true,
+      message: 'Booking is already cancelled.',
+    });
+  }
+
+  // Release reserved seats only for unpaid bookings
+  await store.updateBooking(booking._id, {
+    paymentStatus: 'failed',
+    bookingStatus: 'cancelled',
+
+    cancellationReason:
+      String(reason || 'Payment failed or cancelled').slice(0, 250),
+  });
+
+  await store.restoreTicketSeats(
+    booking.eventId,
+    booking.ticketCategoryId,
+    booking.quantity
+  );
+
+  return res.status(200).json({
     success: true,
     message: 'Payment failure recorded and reserved seats released.',
   });
