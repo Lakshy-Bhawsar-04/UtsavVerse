@@ -338,7 +338,7 @@ export const handleImageUpload = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'Please select an image file.' });
   }
-  const imageUrl = `/uploads/${req.file.filename}`;
+ const imageUrl = `${process.env.SERVER_URL}/uploads/${req.file.filename}`;
   res.status(201).json({
     success: true,
     message: 'Image uploaded successfully.',
