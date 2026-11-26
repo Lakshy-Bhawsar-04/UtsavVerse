@@ -4,7 +4,7 @@
  * You can customize headings, descriptions, and image references here in VS Code.
  */
 
-export const UtsavVerse_IMAGES = {
+export const EVENTORA_IMAGES = {
   heroConcert: '/src/assets/images/hero_indian_concert_1795169039444.jpg',
   wedding: '/src/assets/images/event_indian_wedding_1795169039303.jpg',
   cultural: '/src/assets/images/event_cultural_festival_1795169040114.jpg',
