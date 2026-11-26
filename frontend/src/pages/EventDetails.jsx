@@ -177,35 +177,6 @@ export default function EventDetails() {
               </div>
             </div>
 
-            {/* Event Gallery */}
-            {Array.isArray(event.galleryImages) && event.galleryImages.length > 0 && (
-              <div className="ev-panel mb-4">
-                <h2 className="h5 fw-bold mb-3">Event Gallery</h2>
-                <Row className="g-3">
-                  {event.galleryImages.map((imgUrl, idx) => (
-                    <Col sm={4} key={`${imgUrl}-${idx}`}>
-                      <div
-                        className="overflow-hidden"
-                        style={{
-                          aspectRatio: '4 / 3',
-                          borderRadius: 'var(--ev-radius-sm)',
-                          backgroundColor: 'var(--ev-bg-light)',
-                        }}
-                      >
-                        <img
-                          src={imgUrl}
-                          alt={`${event.title} gallery ${idx + 1}`}
-                          className="w-100 h-100"
-                          style={{ objectFit: 'cover' }}
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-            )}
-
             {/* Verified Attendee Reviews */}
             <div className="ev-panel">
               <div className="d-flex justify-content-between align-items-center mb-3">
