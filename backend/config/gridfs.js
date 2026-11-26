@@ -1,6 +1,5 @@
 
 import mongoose from 'mongoose';
-import { GridFSBucket } from 'mongodb';
 
 export const getGridFSBucket = () => {
   if (
@@ -10,7 +9,10 @@ export const getGridFSBucket = () => {
     throw new Error('MongoDB Atlas is not connected.');
   }
 
-  return new GridFSBucket(mongoose.connection.db, {
-    bucketName: 'eventImages',
-  });
+  return new mongoose.mongo.GridFSBucket(
+    mongoose.connection.db,
+    {
+      bucketName: 'eventImages',
+    }
+  );
 };
