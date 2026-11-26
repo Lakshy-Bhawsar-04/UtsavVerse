@@ -7,6 +7,11 @@ import { store } from '../utils/dataStore.js';
 import { asyncHandler } from '../middleware/errorMiddleware.js';
 import { IMAGES } from '../utils/seedData.js';
 
+import mongoose from 'mongoose';
+import { Readable } from 'stream';
+import { getGridFSBucket } from '../config/gridfs.js';
+
+
 const getMinPrice = (event) => {
   if (!Array.isArray(event.ticketCategories) || event.ticketCategories.length === 0) return 0;
   return Math.min(...event.ticketCategories.map((t) => Number(t.price || 0)));
@@ -336,12 +341,86 @@ export const deleteEvent = asyncHandler(async (req, res) => {
 
 export const handleImageUpload = asyncHandler(async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ success: false, message: 'Please select an image file.' });
+    return res.status(400).json({
+      success: false,
+      message: 'Please select an image file.',
+    });
   }
- const imageUrl = `${process.env.SERVER_URL}/uploads/${req.file.filename}`;
+
+  const bucket = getGridFSBucket();
+
+  const filename = `event_${Date.now()}_${req.file.originalname}`;
+
+  const uploadStream = bucket.openUploadStream(filename, {
+    metadata: {
+      contentType: req.file.mimetype,
+    },
+  });
+
+  await new Promise((resolve, reject) => {
+    uploadStream.once('finish', resolve);
+    uploadStream.once('error', reject);
+
+    Readable.from(req.file.buffer).pipe(uploadStream);
+  });
+
+  const imageUrl =
+    `${process.env.SERVER_URL}/api/events/images/${uploadStream.id}`;
+
   res.status(201).json({
     success: true,
     message: 'Image uploaded successfully.',
     imageUrl,
   });
+});
+
+
+export const getEventImage = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid image ID.',
+    });
+  }
+
+  const bucket = getGridFSBucket();
+  const imageId = new mongoose.Types.ObjectId(req.params.id);
+
+  const files = await bucket
+    .find({ _id: imageId })
+    .toArray();
+
+  if (!files.length) {
+    return res.status(404).json({
+      success: false,
+      message: 'Image not found.',
+    });
+  }
+
+  const file = files[0];
+
+  res.set(
+    'Content-Type',
+    file.metadata?.contentType || 'application/octet-stream'
+  );
+
+  res.set(
+    'Cache-Control',
+    'public, max-age=31536000, immutable'
+  );
+
+  const downloadStream = bucket.openDownloadStream(imageId);
+
+  downloadStream.on('error', (error) => {
+    if (!res.headersSent) {
+      res.status(404).json({
+        success: false,
+        message: 'Unable to load image.',
+      });
+    } else {
+      res.destroy(error);
+    }
+  });
+
+  downloadStream.pipe(res);
 });
