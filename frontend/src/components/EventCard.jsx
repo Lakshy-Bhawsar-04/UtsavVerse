@@ -4,13 +4,19 @@
  * View Details button, and Book Now button.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCalendar, FiMapPin, FiStar } from 'react-icons/fi';
 import { formatINR, formatEventDate } from '../data/eventsData';
+import { resolveImageUrl } from '../services/api';
 
 export default function EventCard({ event }) {
   const [imgError, setImgError] = useState(false);
+  const bannerSrc = resolveImageUrl(event.bannerImage);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [bannerSrc]);
 
   const startingPrice =
     Array.isArray(event.ticketCategories) && event.ticketCategories.length > 0
@@ -25,9 +31,9 @@ export default function EventCard({ event }) {
   return (
     <article className="ev-card">
       <Link to={`/events/${event._id}`} className="ev-card-media text-decoration-none">
-        {!imgError && event.bannerImage ? (
+        {!imgError && bannerSrc ? (
           <img
-            src={event.bannerImage}
+            src={bannerSrc}
             alt={event.title}
             referrerPolicy="no-referrer"
             onError={() => setImgError(true)}

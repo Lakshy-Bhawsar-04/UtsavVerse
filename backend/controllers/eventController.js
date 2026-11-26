@@ -300,6 +300,12 @@ export const updateEvent = asyncHandler(async (req, res) => {
   if (updates.date) {
     updates.date = new Date(updates.date).toISOString();
   }
+  if (updates.bannerImage && !Array.isArray(updates.galleryImages)) {
+    const existingGallery = Array.isArray(event.galleryImages) ? event.galleryImages : [];
+    if (existingGallery.length <= 1 || existingGallery[0] === event.bannerImage) {
+      updates.galleryImages = [updates.bannerImage, ...existingGallery.slice(1)];
+    }
+  }
 
   // Never let non-admin force-approve their own event
   if (req.user.role !== 'admin') {
