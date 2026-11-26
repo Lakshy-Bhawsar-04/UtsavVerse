@@ -31,20 +31,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedMimes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/pjpeg',
-    'image/png',
-    'image/webp',
-    'image/gif',
-    'image/avif',
-  ];
-  const allowedExt = /\.(jpe?g|png|webp|gif|avif)$/i;
-  if (allowedMimes.includes(file.mimetype) || allowedExt.test(file.originalname || '')) {
+  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    const err = new Error('Only JPG, PNG, WebP, GIF, and AVIF image files are permitted.');
+    const err = new Error('Only JPG, PNG, and WebP image files are permitted.');
     err.statusCode = 400;
     cb(err, false);
   }
@@ -54,7 +45,7 @@ export const uploadEventImage = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10 MB limit
+    fileSize: 5 * 1024 * 1024, // 5 MB limit
   },
 });
 

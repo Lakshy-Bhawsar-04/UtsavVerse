@@ -3,19 +3,17 @@
  * Editable copy, Indian cities, category defaults, testimonials, and local image assets.
  * You can customize headings, descriptions, and image references here in VS Code.
  */
+
 export const UtsavVerse_IMAGES = {
   heroConcert: '/src/assets/images/hero_indian_concert_1795169039444.jpg',
   wedding: '/src/assets/images/event_indian_wedding_1795169039303.jpg',
   cultural: '/src/assets/images/event_cultural_festival_1795169040114.jpg',
   tech: '/src/assets/images/event_tech_conference_1795169039578.jpg',
   workshop: '/src/assets/images/event_creative_workshop_1795169040206.jpg',
-  festival: '/src/assets/images/event_festive_celebration_1795169339334.jpg',
+  festival: '/src/assets/images/event_festive_celebration_1795169039334.jpg',
   lakshyBhawsar: '/src/assets/images/lakshy_bhawsar.jpeg',
   arpitGaveshinde: '/src/assets/images/arpit_gaveshinde.jpg',
 };
-
-// OrganizerDashboard compatibility
-export const EVENTORA_IMAGES = UtsavVerse_IMAGES;
 
 export const INDIAN_CITIES = [
   'Mumbai',

@@ -16,7 +16,7 @@ import {
   FiArrowLeft,
   FiShield,
 } from 'react-icons/fi';
-import api, { resolveImageUrl } from '../services/api';
+import api from '../services/api';
 import EventCard from '../components/EventCard';
 import { formatINR, formatEventDate } from '../data/eventsData';
 
@@ -94,7 +94,7 @@ export default function EventDetails() {
         {/* Large Event Banner */}
         <div className="ev-detail-banner mb-4">
           <img
-            src={resolveImageUrl(event.bannerImage)}
+            src={event.bannerImage}
             alt={event.title}
             referrerPolicy="no-referrer"
           />
@@ -193,7 +193,7 @@ export default function EventDetails() {
                         }}
                       >
                         <img
-                          src={resolveImageUrl(imgUrl)}
+                          src={imgUrl}
                           alt={`${event.title} gallery ${idx + 1}`}
                           className="w-100 h-100"
                           style={{ objectFit: 'cover' }}

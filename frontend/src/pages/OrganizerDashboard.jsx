@@ -18,14 +18,14 @@ import {
   Modal,
   Spinner,
 } from 'react-bootstrap';
-import { FiPlus, FiEdit2, FiTrash2, FiUpload, FiImage } from 'react-icons/fi';
-import api, { resolveImageUrl } from '../services/api';
+import { FiPlus, FiEdit2, FiTrash2, FiUpload } from 'react-icons/fi';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useEvents } from '../context/EventContext';
 import {
   EVENT_CATEGORIES,
   INDIAN_CITIES,
-  EVENTORA_IMAGES,
+  UtsavVerse_IMAGES,
   formatINR,
   formatEventDate,
 } from '../data/eventsData';
@@ -49,7 +49,7 @@ const EMPTY_EVENT_FORM = {
   address: '',
   city: 'Mumbai',
   state: 'Maharashtra',
-  bannerImage: EVENTORA_IMAGES.heroConcert,
+  bannerImage: UtsavVerse_IMAGES.heroConcert,
   ticketCategories: [{ ...DEFAULT_TICKET_TIER }],
 };
 
@@ -77,8 +77,6 @@ export default function OrganizerDashboard() {
   const [eventForm, setEventForm] = useState(EMPTY_EVENT_FORM);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [savingEvent, setSavingEvent] = useState(false);
-  const [modalFeedback, setModalFeedback] = useState({ type: '', text: '' });
-  const [previewError, setPreviewError] = useState(false);
 
   // Organizer Profile Form
   const [orgProfile, setOrgProfile] = useState({
@@ -125,35 +123,27 @@ export default function OrganizerDashboard() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingImage(true);
-    setModalFeedback({ type: '', text: '' });
-    setPreviewError(false);
+    setFeedback({ type: '', text: '' });
     try {
       const formData = new FormData();
       formData.append('image', file);
       const { data } = await api.post('/events/upload', formData, {
-        headers: { 'Content-Type': undefined },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       setEventForm((prev) => ({ ...prev, bannerImage: data.imageUrl }));
-      setModalFeedback({
-        type: 'success',
-        text: 'Image uploaded successfully! Preview updated below.',
-      });
     } catch (err) {
-      setModalFeedback({
+      setFeedback({
         type: 'danger',
-        text: err.response?.data?.message || 'Image upload failed. Please try a JPG, PNG, or WebP file under 10MB.',
+        text: err.response?.data?.message || 'Image upload failed.',
       });
     } finally {
       setUploadingImage(false);
-      e.target.value = '';
     }
   };
 
   const openCreateModal = () => {
     setEditingEventId(null);
     setEventForm(EMPTY_EVENT_FORM);
-    setModalFeedback({ type: '', text: '' });
-    setPreviewError(false);
     setShowEventModal(true);
   };
 
@@ -174,8 +164,6 @@ export default function OrganizerDashboard() {
       ticketCategories:
         ev.ticketCategories?.length > 0 ? ev.ticketCategories : [{ ...DEFAULT_TICKET_TIER }],
     });
-    setModalFeedback({ type: '', text: '' });
-    setPreviewError(false);
     setShowEventModal(true);
   };
 
@@ -183,7 +171,6 @@ export default function OrganizerDashboard() {
     e.preventDefault();
     setSavingEvent(true);
     setFeedback({ type: '', text: '' });
-    setModalFeedback({ type: '', text: '' });
 
     try {
       if (editingEventId) {
@@ -196,7 +183,7 @@ export default function OrganizerDashboard() {
       setShowEventModal(false);
       await loadOrganizerData();
     } catch (err) {
-      setModalFeedback({
+      setFeedback({
         type: 'danger',
         text: err.response?.data?.message || 'Could not save event.',
       });
@@ -380,33 +367,8 @@ export default function OrganizerDashboard() {
                           return (
                             <tr key={ev._id}>
                               <td>
-                                <div className="d-flex align-items-center gap-3">
-                                  <div
-                                    className="flex-shrink-0 overflow-hidden d-flex align-items-center justify-content-center"
-                                    style={{
-                                      width: '56px',
-                                      height: '42px',
-                                      borderRadius: '6px',
-                                      backgroundColor: 'var(--ev-bg-light)',
-                                      border: '1px solid var(--ev-border)',
-                                    }}
-                                  >
-                                    {ev.bannerImage ? (
-                                      <img
-                                        src={resolveImageUrl(ev.bannerImage)}
-                                        alt={ev.title}
-                                        className="w-100 h-100"
-                                        style={{ objectFit: 'cover' }}
-                                      />
-                                    ) : (
-                                      <FiImage size={16} className="text-muted" />
-                                    )}
-                                  </div>
-                                  <div>
-                                    <div className="fw-semibold">{ev.title}</div>
-                                    <div className="small text-muted">{ev.city}</div>
-                                  </div>
-                                </div>
+                                <div className="fw-semibold">{ev.title}</div>
+                                <div className="small text-muted">{ev.city}</div>
                               </td>
                               <td>{ev.category}</td>
                               <td className="ev-num">{formatEventDate(ev.date)}</td>
@@ -633,16 +595,6 @@ export default function OrganizerDashboard() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {modalFeedback.text && (
-            <Alert
-              variant={modalFeedback.type}
-              dismissible
-              onClose={() => setModalFeedback({ type: '', text: '' })}
-              className="mb-3"
-            >
-              {modalFeedback.text}
-            </Alert>
-          )}
           <Form onSubmit={handleSaveEvent}>
             <Row className="g-3">
               <Col md={8}>
@@ -748,15 +700,14 @@ export default function OrganizerDashboard() {
                 <Form.Label className="small fw-semibold">
                   Event Banner Image (Upload via Multer or Choose Preset)
                 </Form.Label>
-                <div className="d-flex flex-wrap gap-2 align-items-center mb-2">
+                <div className="d-flex flex-wrap gap-2 align-items-center">
                   <label className="btn btn-ev-outline btn-sm d-inline-flex align-items-center gap-2 mb-0">
                     <FiUpload size={14} />
                     <span>{uploadingImage ? 'Uploading...' : 'Upload Image'}</span>
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
                       hidden
-                      disabled={uploadingImage}
                       onChange={handleImageUpload}
                     />
                   </label>
@@ -764,66 +715,9 @@ export default function OrganizerDashboard() {
                     type="text"
                     size="sm"
                     value={eventForm.bannerImage}
-                    onChange={(e) => {
-                      setPreviewError(false);
-                      setEventForm({ ...eventForm, bannerImage: e.target.value });
-                    }}
-                    placeholder="/uploads/... or https://..."
+                    onChange={(e) => setEventForm({ ...eventForm, bannerImage: e.target.value })}
                     style={{ maxWidth: '420px' }}
                   />
-                </div>
-
-                {/* Live Banner Image Preview */}
-                {eventForm.bannerImage && (
-                  <div
-                    className="overflow-hidden mb-2 d-flex align-items-center justify-content-center"
-                    style={{
-                      maxWidth: '340px',
-                      aspectRatio: '16 / 9',
-                      borderRadius: 'var(--ev-radius-sm)',
-                      border: '1px solid var(--ev-border)',
-                      backgroundColor: 'var(--ev-bg-light)',
-                    }}
-                  >
-                    {!previewError ? (
-                      <img
-                        src={resolveImageUrl(eventForm.bannerImage)}
-                        alt="Banner Preview"
-                        className="w-100 h-100"
-                        style={{ objectFit: 'cover' }}
-                        onError={() => setPreviewError(true)}
-                      />
-                    ) : (
-                      <div className="p-3 text-center small text-danger">
-                        Unable to preview image URL. Please upload a valid JPG, PNG, or WebP file.
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="d-flex flex-wrap gap-2 align-items-center">
-                  <span className="small text-muted">Quick Presets:</span>
-                  {[
-                    { label: 'Concert', url: EVENTORA_IMAGES.heroConcert },
-                    { label: 'Wedding', url: EVENTORA_IMAGES.wedding },
-                    { label: 'Festival', url: EVENTORA_IMAGES.festival },
-                    { label: 'Tech', url: EVENTORA_IMAGES.tech },
-                    { label: 'Workshop', url: EVENTORA_IMAGES.workshop },
-                  ].map((preset) => (
-                    <Button
-                      key={preset.label}
-                      type="button"
-                      size="sm"
-                      variant={eventForm.bannerImage === preset.url ? 'primary' : 'outline-secondary'}
-                      onClick={() => {
-                        setPreviewError(false);
-                        setEventForm({ ...eventForm, bannerImage: preset.url });
-                      }}
-                      style={{ fontSize: '0.75rem', padding: '0.15rem 0.5rem' }}
-                    >
-                      {preset.label}
-                    </Button>
-                  ))}
                 </div>
               </Col>
 
