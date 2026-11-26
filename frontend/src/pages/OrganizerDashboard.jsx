@@ -708,17 +708,45 @@ export default function OrganizerDashboard() {
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
                       hidden
-                      onChange={handleImageUpload}
+                 onChange={handleImageUpload}
                     />
                   </label>
+
                   <Form.Control
                     type="text"
                     size="sm"
                     value={eventForm.bannerImage}
-                    onChange={(e) => setEventForm({ ...eventForm, bannerImage: e.target.value })}
+                    onChange={(e) =>
+                      setEventForm({
+                        ...eventForm,
+                        bannerImage: e.target.value,
+                      })
+                    }
                     style={{ maxWidth: '420px' }}
                   />
                 </div>
+
+                {/* Event Image Preview */}
+                {eventForm.bannerImage && (
+                  <div className="mt-3">
+                    <Form.Label className="small fw-semibold">
+                      Image Preview
+                    </Form.Label>
+
+                    <img
+                      src={eventForm.bannerImage}
+                      alt="Event Banner"
+                      style={{
+                        width: '100%',
+                        maxWidth: '500px',
+                        height: '220px',
+                        objectFit: 'cover',
+                        borderRadius: '12px',
+                        border: '1px solid #ddd',
+                      }}
+                    />
+                  </div>
+                )}
               </Col>
 
               <Col xs={12} className="pt-2">
